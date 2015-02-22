@@ -3,6 +3,7 @@
 
 #include "httpd.h"
 
+int ICACHE_FLASH_ATTR cgiGetLed(HttpdConnData *connData);
 int cgiLed(HttpdConnData *connData);
 void tplLed(HttpdConnData *connData, char *token, void **arg);
 int cgiReadFlash(HttpdConnData *connData);

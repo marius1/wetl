@@ -22,6 +22,14 @@
 
 static ETSTimer resetBtntimer;
 
+int ICACHE_FLASH_ATTR ioGetLed() {
+	if (GPIO_INPUT_GET(LEDGPIO)) {
+		return 1;
+	} else {
+		return 0;
+	}		
+}
+
 void ICACHE_FLASH_ATTR ioLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {

@@ -27,6 +27,21 @@ flash as a binary. Also handles the hit counter on the main page.
 //cause I can't be bothered to write an ioGetLed()
 static char currLedState=0;
 
+int ICACHE_FLASH_ATTR cgiGetLed(HttpdConnData *connData) {
+	int len;
+	char buff[1024];
+	int state = ioGetLed();
+	
+	httpdStartResponse(connData, 200);
+	httpdHeader(connData, "Content-Type", "text/json");
+	httpdEndHeaders(connData);
+	
+	len=os_sprintf(buff, "{\"state\": \"%s\"}", (state == 1) ? "on" : "off");
+	httpdSend(connData, buff, len);
+	
+	return HTTPD_CGI_DONE;
+}
+
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
