@@ -147,7 +147,7 @@ flash: $(FW_FILE_1) $(FW_FILE_2)
 	$(Q) sleep $(ESPDELAY) || true
 	$(Q) $(ESPTOOL) -cp $(ESPPORT) -cb $(ESPBAUD) -ca 0x40000 -cf firmware/0x40000.bin -v
 
-webpages.espfs: html/ html/wifi/ mkespfsimage/mkespfsimage
+webpages.espfs: html/ html/css/ html/js/ html/traffic-light/ mkespfsimage/mkespfsimage
 	cd html; find | ../mkespfsimage/mkespfsimage > ../webpages.espfs; cd ..
 
 mkespfsimage/mkespfsimage: mkespfsimage/
