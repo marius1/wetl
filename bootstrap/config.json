@@ -384,11 +384,12 @@
     "navs.less",
     "navbar.less",
     "alerts.less",
-    "component-animations.less"
+    "dropdowns.less"
   ],
   "js": [
-    "affix.js",
+    "alert.js",
+    "dropdown.js",
     "collapse.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=aa86933e49927a038a2f"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=8ebd7762446ccd759822"
 }
