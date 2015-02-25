@@ -30,7 +30,7 @@ int ICACHE_FLASH_ATTR ioGetLed() {
 	}		
 }
 
-void ICACHE_FLASH_ATTR ioLed(int ena) {
+void ICACHE_FLASH_ATTR ioSetLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
 		gpio_output_set((1<<LEDGPIO), 0, (1<<LEDGPIO), 0);

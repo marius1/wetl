@@ -16,6 +16,8 @@ typedef struct HttpdConnData HttpdConnData;
 
 typedef int (* cgiSendCallback)(HttpdConnData *connData);
 
+typedef enum {GET, POST, DELETE, PUT} HttpdMethod_t;
+
 //A struct describing a http connection. This gets passed to cgi functions.
 struct HttpdConnData {
 	struct espconn *conn;
@@ -27,6 +29,7 @@ struct HttpdConnData {
 	cgiSendCallback cgi;
 	int postLen;
 	char *postBuff;
+  HttpdMethod_t method;
 };
 
 //A struct describing an url. This is the main struct that's used to send different URL requests to

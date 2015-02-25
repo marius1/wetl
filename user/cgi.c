@@ -23,55 +23,46 @@ flash as a binary. Also handles the hit counter on the main page.
 #include <ip_addr.h>
 #include "espmissingincludes.h"
 
-
-//cause I can't be bothered to write an ioGetLed()
-static char currLedState=0;
-
-int ICACHE_FLASH_ATTR cgiGetLed(HttpdConnData *connData) {
+int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
 	char buff[1024];
-	int state = ioGetLed();
+	int state;
+  int postState;
+  
+  if (connData->conn==NULL) {
+		//Connection aborted. Clean up.
+		return HTTPD_CGI_DONE;
+	}
 	
 	httpdStartResponse(connData, 200);
 	httpdHeader(connData, "Content-Type", "text/json");
 	httpdEndHeaders(connData);
 	
-	len=os_sprintf(buff, "{\"state\": \"%s\"}", (state == 1) ? "on" : "off");
+  if (connData->method == POST) {
+    len=httpdFindArg(connData->postBuff, "state", buff, sizeof(buff));
+    if (len != 0) {
+      postState = atoi(buff);
+      ioSetLed(postState);
+    }
+  }
+  
+  state = ioGetLed();
+	len=os_sprintf(buff, "{\"state\": %d}", state);
 	httpdSend(connData, buff, len);
 	
 	return HTTPD_CGI_DONE;
 }
 
-//Cgi that turns the LED on or off according to the 'led' param in the POST data
-int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
-	int len;
-	char buff[1024];
-	
-	if (connData->conn==NULL) {
-		//Connection aborted. Clean up.
-		return HTTPD_CGI_DONE;
-	}
-
-	len=httpdFindArg(connData->postBuff, "led", buff, sizeof(buff));
-	if (len!=0) {
-		currLedState=atoi(buff);
-		ioLed(currLedState);
-	}
-
-	httpdRedirect(connData, "led.tpl");
-	return HTTPD_CGI_DONE;
-}
-
-
-
 //Template code for the led page.
 void ICACHE_FLASH_ATTR tplLed(HttpdConnData *connData, char *token, void **arg) {
 	char buff[128];
-	if (token==NULL) return;
+  int state;
+	if (token==NULL) return;    
 
 	os_strcpy(buff, "Unknown");
 	if (os_strcmp(token, "ledstate")==0) {
-		if (currLedState) {
+    state=ioGetLed();
+		if (state) {
 			os_strcpy(buff, "on");
 		} else {
 			os_strcpy(buff, "off");

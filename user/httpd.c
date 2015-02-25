@@ -320,6 +320,16 @@ static void ICACHE_FLASH_ATTR httpdSendResp(HttpdConnData *conn) {
 static void ICACHE_FLASH_ATTR httpdParseHeader(char *h, HttpdConnData *conn) {
 	int i;
 //	os_printf("Got header %s\n", h);
+  if (os_strncmp(h, "GET ", 4)==0) {
+    conn->method = GET;
+  } else if (os_strncmp(h, "POST ", 5)==0) {
+    conn->method = POST;  
+  } else if (os_strncmp(h, "DELETE ", 7)==0) {
+    conn->method = DELETE;  
+  } else if (os_strncmp(h, "PUT ", 4)==0) {
+    conn->method = PUT;
+  }
+
 	if (os_strncmp(h, "GET ", 4)==0 || os_strncmp(h, "POST ", 5)==0) {
 		char *e;
 		
