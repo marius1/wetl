@@ -1,0 +1,12 @@
+.traffic-light {
+	text-align: center;
+	padding: 0px 40px;
+}
+
+.traffic-light div {
+	font-size: 0px;
+}
+
+.traffic-light img {
+  width: 75%;  
+}

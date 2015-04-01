@@ -52,6 +52,102 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	
 	return HTTPD_CGI_DONE;
 }
+/*
+{
+  status : {
+    mode: 0,
+    version: "1.0.0",
+    station: {
+      ip: "192.168.0.2",
+      gateway: "192.168.0.1",
+      mask: "192.168.0.255",
+      ssid: "redstar-mini",
+      password: "hapsnorkel",
+      mac_adderss: "3892897adf",
+      auth_mode: 4,
+      status: 4,
+      channel: 7
+    },
+    access_point: {
+      ip: "192.168.0.2",
+      gateway: "192.168.0.1",
+      mask: "192.168.0.255",
+      ssid: "redstar-mini",
+      password: "hapsnorkel",
+      mac_adderss: "3892897adf",
+      auth_mode: 4,
+      status: 4.
+      channel: 7
+    }
+  }
+}
+*/
+int ICACHE_FLASH_ATTR cgiStatus(HttpdConnData *connData) {
+  int len, mode, status;
+	char buff[1024];
+  static struct station_config stconf;
+  static struct softap_config softapconf;
+  struct ip_info ipconfig;
+  uint8 hwaddr[6];
+  
+  if (connData->conn==NULL) {
+		//Connection aborted. Clean up.
+		return HTTPD_CGI_DONE;
+	}
+  
+  if (connData->method != GET) {
+    return HTTPD_CGI_NOTFOUND;
+  }
+  
+  httpdStartResponse(connData, 200);
+	httpdHeader(connData, "Content-Type", "text/json");
+	httpdEndHeaders(connData);
+  
+  mode = wifi_get_opmode();  
+  len=os_sprintf(buff, "{\"status\": { \"mode\": %d, \"version\": \"%s\" ", mode, "1.0.0");
+	httpdSend(connData, buff, len);
+  
+  if (mode & (1<<(STATION_MODE-1))) {
+    wifi_station_get_config(&stconf);
+    status=wifi_station_get_connect_status();
+    wifi_get_ip_info(STATION_IF, &ipconfig);
+    wifi_get_macaddr(STATION_IF, hwaddr);
+    
+    len=os_sprintf(buff, ", \"station\": { \"ip\": \"" IPSTR "\", \"gw\": \"" IPSTR "\", \"mask\": \"" IPSTR "\", \"ssid\": \"%s\", \"password\": \"%s\", \"mac_address\": \"" MACSTR "\", \"auth_mode\": %d, \"status\": %d, \"channel\": %d }",
+      IP2STR(&ipconfig.ip),
+      IP2STR(&ipconfig.netmask),
+      IP2STR(&ipconfig.gw),
+      (char*)stconf.ssid,
+      (char*)stconf.password,
+      MAC2STR(hwaddr),
+      -1,//authmode,
+      status,
+      -1);//channel);
+    httpdSend(connData, buff, len);
+  }
+  
+  if (mode & (1<<(SOFTAP_MODE-1))) {
+    wifi_softap_get_config(&softapconf);
+    wifi_get_ip_info(SOFTAP_IF, &ipconfig);
+    wifi_get_macaddr(SOFTAP_IF, hwaddr);
+    
+    len=os_sprintf(buff, ", \"access_point\": { \"ip\": \"" IPSTR "\", \"gw\": \"" IPSTR "\", \"mask\": \"" IPSTR "\", \"ssid\": \"%s\", \"password\": \"%s\", \"mac_address\": \"" MACSTR "\", \"auth_mode\": %d, \"channel\": %d }",
+      IP2STR(&ipconfig.ip),
+      IP2STR(&ipconfig.netmask),
+      IP2STR(&ipconfig.gw),
+      (char*)softapconf.ssid,
+      (char*)softapconf.password,
+      MAC2STR(hwaddr),
+      softapconf.authmode,
+      softapconf.channel);
+    httpdSend(connData, buff, len);
+  }
+  
+  os_strcpy(buff, "}}");
+	httpdSend(connData, buff, -1);
+  
+  return HTTPD_CGI_DONE;
+}
 
 //Template code for the led page.
 void ICACHE_FLASH_ATTR tplLed(HttpdConnData *connData, char *token, void **arg) {

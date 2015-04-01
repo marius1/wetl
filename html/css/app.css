@@ -1,0 +1,42 @@
+body {
+  padding-top: 90px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: #337ab7;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50px;
+  background-color: #565254;
+}
+
+.navbar li {
+  display: block;
+  float: left;
+  list-style: none;
+}
+
+.navbar li a {
+  color: #D0CFCF;
+  line-height: 20px;
+  padding: 15px;
+}
+.navbar li.active a {
+  background-color: #7A7D7D;
+}
+
+.container {
+  width: 750px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}

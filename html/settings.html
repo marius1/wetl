@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>wetl</title>
+
+    <link href="css/app.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">        
+        <ul class="nav">
+          <li class="active"><a href="index.html">wetl</a></li>
+          <li><a href="settings.html">settings</a></li>   
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2>Status</h2>
+      <p>Current status off the device, AP it is connected to, IP address, etc.</p>
+      <hr />
+      
+      <h2>WiFi</h2>
+      <p>To connect to a WiFi network, please select one of the detected networks.</p>
+      <table class="table table-striped">
+        <thead>
+          <tr><th>&nbsp;</th><th></th></tr>
+        </thead>
+      <table>
+      <hr />
+      
+      <h2>Reset</h2>
+      <p>Reset the device to AP mode.</p>
+      <button class="btn">Reset</button>
+    </div>
+
+    <script src="js/jquery.custom.min.js"></script>
+    <script>
+    $(window).on('load', function() {
+      $.get('/status.cgi', function(data) {
+        console.log(data);
+      });
+    });
+    </script>
+  </body>
+</html>
