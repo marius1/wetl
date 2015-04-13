@@ -1,0 +1,4 @@
+WETL stands for Wifi Enabled Traffic Light. 
+
+In the base it is an ESP-8266 with an http server on it, forked from sprite_tm's awesome work. See README.esp-httpd for more info on that.
+
