@@ -98,7 +98,7 @@ int ICACHE_FLASH_ATTR cgiStatus(HttpdConnData *connData) {
   if (connData->method != GET) {
     return HTTPD_CGI_NOTFOUND;
   }
-  
+    
   httpdStartResponse(connData, 200);
 	httpdHeader(connData, "Content-Type", "text/json");
 	httpdEndHeaders(connData);
@@ -140,14 +140,22 @@ int ICACHE_FLASH_ATTR cgiStatus(HttpdConnData *connData) {
       MAC2STR(hwaddr),
       softapconf.authmode,
       softapconf.channel);
-    httpdSend(connData, buff, len);
+    httpdSend(connData, buff, len);      
   }
   
   os_strcpy(buff, "}}");
 	httpdSend(connData, buff, -1);
-  
+    
   return HTTPD_CGI_DONE;
 }
+
+/*os_memset(softapconf.ssid, 0, sizeof(softapconf.ssid));
+      os_memset(softapconf.password, 0, sizeof(softapconf.password));
+      os_sprintf((char *)softapconf.ssid, "WETL_991AB1");
+      softapconf.max_connection = 255; // 1?
+      softapconf.ssid_hidden = 0;
+      softapconf.ssid_len = 11;
+      wifi_softap_set_config(&softapconf);*/
 
 //Template code for the led page.
 void ICACHE_FLASH_ATTR tplLed(HttpdConnData *connData, char *token, void **arg) {

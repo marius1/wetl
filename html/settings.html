@@ -20,14 +20,15 @@
 
     <div class="container">
       <h2>Status</h2>
-      <p>Current status off the device, AP it is connected to, IP address, etc.</p>
+      <p>Current status off the device</p>
+      
       <hr />
       
       <h2>WiFi</h2>
       <p>To connect to a WiFi network, please select one of the detected networks.</p>
       <table class="table table-striped">
         <thead>
-          <tr><th>&nbsp;</th><th></th></tr>
+          <tr><th>&nbsp;</th><th></th></tr>          
         </thead>
       <table>
       <hr />
@@ -40,7 +41,8 @@
     <script src="js/jquery.custom.min.js"></script>
     <script>
     $(window).on('load', function() {
-      $.get('/status.cgi', function(data) {
+      //$.get('/status.cgi', function(data) {
+      $.get('http://junk.amsterdam.bronstring.net/status_mode_2_not_connected.json', function(data) {
         console.log(data);
       });
     });

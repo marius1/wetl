@@ -1,3 +1,5 @@
+var q;
+
 +function ($) {
   'use strict';
   
@@ -18,8 +20,10 @@
   TrafficLight.DEFAULTS = {
   }
   
-  TrafficLight.prototype.setState = function () {
-    if (this.state == "red") {
+  TrafficLight.prototype.setState = function (state) {    
+    var setState = state || this.state;
+        
+    if (setState == "red") {
       this.$element.find('div:nth-child(2) img').replaceWith('<img src="traffic-light/red.png" />');
       this.$element.find('div:nth-child(4) img').replaceWith('<img src="traffic-light/off.png" />');
     } else {
@@ -27,7 +31,7 @@
       this.$element.find('div:nth-child(4) img').replaceWith('<img src="traffic-light/green.png" />');
     }
     
-    this.state = (this.state == "red") ? "green" : "red"
+    this.state = (setState == "red") ? "green" : "red"
   }
   
   TrafficLight.prototype.toggle = function () {   
@@ -39,15 +43,17 @@
   }
   
   function Plugin(option) {
+    var args = arguments;
     return this.each(function () {
       var $this   = $(this)
       var data    = $this.data('bs.trafficlight')
       var options = typeof option == 'object' && option
+      var state = (typeof option == 'object') ? options.state : args[1];
 
       if (!data) $this.data('bs.trafficlight', (data = new TrafficLight(this, options)))
       
       if (option == 'toggle') data.toggle()
-      else if (option) data.setState()
+      else if (option) data.setState(state)
     })
   }
   

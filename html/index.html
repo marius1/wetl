@@ -33,7 +33,7 @@
       });
       
       $.get('/led.cgi', function(data) {
-        var state = (data.state == 0) ? "red" : "green";
+        var state = (data.state == 0) ? "red" : "green";        
         $('.traffic-light').trafficLight('setState', state)
       });
     });
