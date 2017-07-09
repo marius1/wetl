@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>wetl</title>
+        <link href="app.css" rel="stylesheet">
+        <script src="app.js"></script>
+    </head>
+    <body>
+        <ul id="apList">
+        </ul>
+        <button id="refreshButton" onclick="refreshApList()">Refresh</button>
+        <form action="/wifi/save" method="POST">
+        <div>
+            <label for="ssid">SSID</label>
+            <input name="ssid" id="ssid" type="text" />
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input name="password" id="password" type="text" />
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+        </form>
+<script>
+function refreshApList() {
+    document.getElementById("refreshButton").disabled = true;
+
+    function parseApList(data) {
+        var apList = document.getElementById("apList");
+        while( apList.hasChildNodes() ){
+            apList.removeChild(apList.lastChild);
+        }
+
+        var data = JSON.parse(data);
+        data.forEach(function(el){
+            var a = document.createElement("a");
+            var li = document.createElement("li");
+            li.appendChild(a);
+
+            a.href = "#";
+            a.innerText = el.ssid + " (" + el.rssi + ")";
+            a.setAttribute("data-ssid", el.ssid);
+            a.addEventListener("click", function(e){
+                document.getElementById("ssid").value = this.dataset.ssid;
+                document.getElementById("password").focus();
+                e.preventDefault();
+            });
+            
+            apList.appendChild(li);
+        });
+
+        document.getElementById("refreshButton").disabled = false;
+    }
+
+    ajax('/wifi/list', parseApList, 'GET', null);
+}
+
+(function() { 
+    refreshApList();
+})();
+</script>
+    </body>
+</html>

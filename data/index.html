@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>wetl</title>
+        <link href="app.css" rel="stylesheet">
+        <script src="app.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <img id="state" src="red.svg" />
+        </div>
+<script>
+var state = 'red';
+(function() {
+    var stateEl = document.getElementById('state');
+    function handleResponse(data) {
+        data = JSON.parse(data);
+
+        state = data.state;
+        stateEl.src = state + ".svg";
+    }
+
+    ajax('/light', handleResponse, 'GET', null);
+
+    stateEl.addEventListener('click', function() {
+        var newState = (state == 'green') ? 'red' : 'green';
+        ajax('/light', handleResponse, 'POST', 'state=' + newState);
+    });
+})();
+</script>
+  </body>
+</html>
